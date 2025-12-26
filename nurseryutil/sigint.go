@@ -69,6 +69,12 @@ func ShutdownOnInterrupt(
 //
 // The shutdown reason is lost when using this function. If you need it, set up
 // a thread yourself and call ShutdownOnInterrupt directly.
+//
+//	do := nursery.Open(context.Background())
+//	do(func(nur nursery.Nursery) {
+//		_ = nurseryutil.SetupShutdownOnInterrupt(nur, nil)
+//		// The rest of your code goes here...
+//	})
 func SetupShutdownOnInterrupt(nur nursery.Nursery, onInterrupt func()) error {
 	return nur.StartSoon(func(nur nursery.Nursery) {
 		_ = ShutdownOnInterrupt(nur, onInterrupt)
