@@ -1,6 +1,6 @@
 module github.com/ancarda-cloud/go-lib-nursery
 
-go 1.25.3
+go 1.24.0
 
 require (
 	git.sr.ht/~ancarda/consterr v1.0.1
