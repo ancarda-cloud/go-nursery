@@ -9,7 +9,7 @@ import (
 )
 
 // ShutdownReason indicates why the nursery is being shutdown.
-type ShutdownReason int
+type ShutdownReason byte
 
 const (
 	// ShutdownReasonNurseryShutdown indicates a thread elsewhere called the
