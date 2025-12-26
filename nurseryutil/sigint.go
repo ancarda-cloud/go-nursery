@@ -5,7 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/ancarda-cloud/go-lib-nursery"
+	nursery "github.com/ancarda-cloud/go-lib-nursery"
 )
 
 // ShutdownReason indicates why the nursery is being shutdown.
