@@ -10,6 +10,7 @@ type nursery struct {
 	ctx context.Context
 	cf  context.CancelFunc
 	wg  sync.WaitGroup
+	mtx sync.Mutex
 }
 
 // Open creates a nursery and returns a callback function that can be used to
@@ -23,12 +24,16 @@ func Open(ctx context.Context) func(CallbackFunc) {
 		ctx: ctx,
 		cf:  cf,
 		wg:  sync.WaitGroup{},
+		mtx: sync.Mutex{},
 	}
 
 	return nur.exec
 }
 
 func (nur *nursery) StartSoon(callback CallbackFunc) error {
+	nur.mtx.Lock()
+	defer nur.mtx.Unlock()
+
 	err := nur.ctx.Err()
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrShuttingDown, err)
@@ -46,6 +51,9 @@ func (nur *nursery) StartSoon(callback CallbackFunc) error {
 }
 
 func (nur *nursery) Shutdown() {
+	nur.mtx.Lock()
+	defer nur.mtx.Unlock()
+
 	nur.cf()
 }
 
