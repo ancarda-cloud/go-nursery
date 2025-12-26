@@ -36,11 +36,11 @@ func (nur *nursery) StartSoon(callback CallbackFunc) error {
 
 	nur.wg.Add(1)
 
-	go (func(nur *nursery, callback CallbackFunc) {
+	go func(nur *nursery, callback CallbackFunc) {
 		defer nur.wg.Done()
 
 		callback(nur)
-	})(nur, callback)
+	}(nur, callback)
 
 	return nil
 }
