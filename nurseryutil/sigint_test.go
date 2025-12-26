@@ -82,8 +82,8 @@ func TestSetupShutdownOnInterrupt_OnAlreadyShutdownNursery(t *testing.T) {
 func interrupt(t *testing.T) {
 	t.Helper()
 
-	// Sometimes it takes just a tiny bit of time to start listening for the signal
-	// So this method sleeps for a tiny fraction of a second.
+	// Sometimes it takes just a tiny bit of time to start listening for the
+	// signal, so this method sleeps for a tiny fraction of a second.
 	time.Sleep(time.Millisecond)
 
 	proc, err := os.FindProcess(os.Getpid())

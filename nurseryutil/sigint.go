@@ -40,7 +40,10 @@ const (
 // To perform actions as soon as SIGINT is raised, pass a function as the second
 // argument. The nursery shutdown will be initiated after the method returns, so
 // it's suggested you don't perform extensive work in the hook.
-func ShutdownOnInterrupt(nur nursery.Nursery, onInterrupt func()) (reason ShutdownReason) {
+func ShutdownOnInterrupt(
+	nur nursery.Nursery,
+	onInterrupt func(),
+) (reason ShutdownReason) {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
 
@@ -58,7 +61,7 @@ func ShutdownOnInterrupt(nur nursery.Nursery, onInterrupt func()) (reason Shutdo
 	signal.Stop(signalChan)
 	close(signalChan)
 
-	return
+	return reason
 }
 
 // SetupShutdownOnInterrupt is a convenience wrapper around ShutdownOnInterrupt

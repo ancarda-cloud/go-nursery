@@ -17,6 +17,7 @@
 // The above snippet will print "Hello World" or "World Hello", depending on
 // random timing effects.
 //
-// You should not capture the Nursery object from the callback of Open. It will not
-// be usable once shutdown, and it will shut down when your top level function returns.
+// You should not capture the Nursery object from the callback of Open. It will
+// not be usable once shutdown, and it will shut down when your top level
+// function returns.
 package nursery

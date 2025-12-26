@@ -54,7 +54,12 @@ func TestGoroutinesWaitForNurseryToBeFinished(t *testing.T) {
 		})
 	})
 
-	assert.Equal(t, int32(2), ctr.Load(), "Expected two goroutines to have been executed")
+	assert.Equal(
+		t,
+		int32(2),
+		ctr.Load(),
+		"Expected two goroutines to have been executed",
+	)
 }
 
 func TestGoroutinesRunInParallel(t *testing.T) {
