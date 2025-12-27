@@ -1,4 +1,4 @@
-module github.com/ancarda-cloud/go-lib-nursery
+module github.com/ancarda-cloud/go-nursery
 
 go 1.24.0
 

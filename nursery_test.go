@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	nursery "github.com/ancarda-cloud/go-lib-nursery"
+	nursery "github.com/ancarda-cloud/go-nursery"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

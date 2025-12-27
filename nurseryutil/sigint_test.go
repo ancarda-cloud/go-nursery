@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	nursery "github.com/ancarda-cloud/go-lib-nursery"
-	"github.com/ancarda-cloud/go-lib-nursery/nurseryutil"
+	nursery "github.com/ancarda-cloud/go-nursery"
+	"github.com/ancarda-cloud/go-nursery/nurseryutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
