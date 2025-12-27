@@ -34,7 +34,7 @@ func TestShutdown(t *testing.T) {
 			panic("Expected nursery to be shutting down")
 		}
 
-		err = nur.StartSoon(fatalFunc)
+		err = nur.Start(fatalFunc)
 		require.Error(t, err)
 		require.ErrorIs(t, err, nursery.ErrShuttingDown)
 	})
@@ -46,10 +46,10 @@ func TestGoroutinesWaitForNurseryToBeFinished(t *testing.T) {
 	ctr := atomic.Int32{}
 
 	nursery.Open(t.Context())(func(nur nursery.Nursery) {
-		_ = nur.StartSoon(func(_ nursery.Nursery) {
+		_ = nur.Start(func(_ nursery.Nursery) {
 			ctr.Add(1)
 		})
-		_ = nur.StartSoon(func(_ nursery.Nursery) {
+		_ = nur.Start(func(_ nursery.Nursery) {
 			ctr.Add(1)
 		})
 	})
@@ -71,7 +71,7 @@ func TestGoroutinesRunInParallel(t *testing.T) {
 		startTime = time.Now()
 
 		for range 10_000 {
-			_ = nur.StartSoon(func(_ nursery.Nursery) {
+			_ = nur.Start(func(_ nursery.Nursery) {
 				time.Sleep(time.Millisecond)
 			})
 		}
@@ -112,7 +112,7 @@ func TestCapturedNurseryRegistersAsShutdown(t *testing.T) {
 		panic("Expected nursery to be shutting down")
 	}
 
-	err = captured.StartSoon(fatalFunc)
+	err = captured.Start(fatalFunc)
 	require.Error(t, err)
 	assert.ErrorIs(t, err, nursery.ErrShuttingDown)
 }
@@ -137,13 +137,13 @@ func BenchmarkNurseryShutdown(b *testing.B) {
 	}
 }
 
-func BenchmarkNurseryStartSoon(b *testing.B) {
+func BenchmarkNurseryStart(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for range b.N {
 		nursery.Open(b.Context())(func(nur nursery.Nursery) {
-			_ = nur.StartSoon(func(_ nursery.Nursery) {
+			_ = nur.Start(func(_ nursery.Nursery) {
 			})
 		})
 	}

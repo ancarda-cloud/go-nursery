@@ -15,18 +15,18 @@ type (
 	//
 	// All methods may be called from multiple goroutines simultaneously.
 	Nursery interface {
-		// StartSoon spins up a goroutine and returns right away so the
-		// parent function may call StartSoon again.
+		// Start spins up a goroutine and returns right away so the parent
+		// function may call nursery functions.
 		//
 		// You will get ErrShuttingDown if the nursery is shutting down and
 		// your goroutine was not launched. A non shutdown nursery will always
 		// return nil.
-		StartSoon(nur CallbackFunc) error
+		Start(nur CallbackFunc) error
 
 		// Shutdown cancels the nursery, propagating cancellation to all
 		// launched goroutines.
 		//
-		// After Shutdown has been called, all subsequent calls to StartSoon
+		// After Shutdown has been called, all subsequent calls to Start
 		// will fail with ErrShuttingDown.
 		Shutdown()
 

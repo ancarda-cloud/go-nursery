@@ -30,7 +30,7 @@ func Open(ctx context.Context) func(CallbackFunc) {
 	return nur.exec
 }
 
-func (nur *nursery) StartSoon(callback CallbackFunc) error {
+func (nur *nursery) Start(callback CallbackFunc) error {
 	nur.mtx.Lock()
 	defer nur.mtx.Unlock()
 

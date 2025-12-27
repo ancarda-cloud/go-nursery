@@ -14,7 +14,7 @@ import (
 //nolint:paralleltest // test relies on UNIX signals.
 func TestShutdownOnInterrupt_ByClosingNursery(t *testing.T) {
 	(nursery.Open(t.Context()))(func(nur nursery.Nursery) {
-		err := nur.StartSoon(func(nur nursery.Nursery) {
+		err := nur.Start(func(nur nursery.Nursery) {
 			reason := nurseryutil.ShutdownOnInterrupt(nur, func() {
 				t.Fatal("Was not expected to be called")
 			})
@@ -28,7 +28,7 @@ func TestShutdownOnInterrupt_ByClosingNursery(t *testing.T) {
 //nolint:paralleltest // test relies on UNIX signals.
 func TestShutdownOnInterrupt_ByInterrupting(t *testing.T) {
 	(nursery.Open(t.Context()))(func(nur nursery.Nursery) {
-		err := nur.StartSoon(func(nur nursery.Nursery) {
+		err := nur.Start(func(nur nursery.Nursery) {
 			wasCalled := false
 			reason := nurseryutil.ShutdownOnInterrupt(nur, func() {
 				wasCalled = true
@@ -44,7 +44,7 @@ func TestShutdownOnInterrupt_ByInterrupting(t *testing.T) {
 //nolint:paralleltest // test relies on UNIX signals.
 func TestShutdownOnInterrupt_ByInterruptingWithNilHook(t *testing.T) {
 	(nursery.Open(t.Context()))(func(nur nursery.Nursery) {
-		err := nur.StartSoon(func(nur nursery.Nursery) {
+		err := nur.Start(func(nur nursery.Nursery) {
 			reason := nurseryutil.ShutdownOnInterrupt(nur, nil)
 			assert.Equal(t, nurseryutil.ShutdownReasonInterruptReceived, reason)
 		})

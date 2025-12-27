@@ -26,12 +26,12 @@ const (
 // that is received.
 //
 // The function blocks until the nursery is shut down, so you should wrap it in
-// a nur.StartSoon call. Typically, you'd start this thread as soon as the
+// a nur.Start call. Typically, you'd start this thread as soon as the
 // nursery is created, e.g.:
 //
 //	do := nursery.Open(context.Background())
 //	do(func(nur nursery.Nursery) {
-//		_ = nur.StartSoon(func(nur nursery.Nursery) {
+//		_ = nur.Start(func(nur nursery.Nursery) {
 //			_ = ShutdownOnInterrupt(nur, nil)
 //		})
 //		// The rest of your code goes here...
@@ -76,7 +76,7 @@ func ShutdownOnInterrupt(
 //		// The rest of your code goes here...
 //	})
 func SetupShutdownOnInterrupt(nur nursery.Nursery, onInterrupt func()) error {
-	return nur.StartSoon(func(nur nursery.Nursery) {
+	return nur.Start(func(nur nursery.Nursery) {
 		_ = ShutdownOnInterrupt(nur, onInterrupt)
 	})
 }

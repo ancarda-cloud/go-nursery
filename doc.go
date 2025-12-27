@@ -6,10 +6,10 @@
 //
 //	do := nursery.Open(context.Background())
 //	do(func(nur nursery.Nursery) {
-//		_ = nur.StartSoon(func(_ nursery.Nursery) {
+//		_ = nur.Start(func(_ nursery.Nursery) {
 //			log.Println("Hello")
 //		})
-//		_ = nur.StartSoon(func(_ nursery.Nursery) {
+//		_ = nur.Start(func(_ nursery.Nursery) {
 //			log.Println("World")
 //		})
 //	})
