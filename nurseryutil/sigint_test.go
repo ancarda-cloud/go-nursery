@@ -71,12 +71,11 @@ func TestSetupShutdownOnInterrupt(t *testing.T) {
 func TestSetupShutdownOnInterrupt_OnAlreadyShutdownNursery(t *testing.T) {
 	t.Parallel()
 
-	err := nurseryutil.SetupShutdownOnInterrupt(getShutdownNursery(t), func() {
-		t.Fatal("Was not expected to be called")
+	assert.Panics(t, func() {
+		_ = nurseryutil.SetupShutdownOnInterrupt(getShutdownNursery(t), func() {
+			t.Fatal("Was not expected to be called")
+		})
 	})
-
-	require.Error(t, err)
-	require.ErrorIs(t, err, nursery.ErrShuttingDown)
 }
 
 func interrupt(t *testing.T) {

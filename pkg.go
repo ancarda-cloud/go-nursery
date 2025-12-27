@@ -14,17 +14,21 @@ type (
 	// Nursery is an implementation of structured concurrency.
 	//
 	// All methods may be called from multiple goroutines simultaneously.
+	//
+	// Do not capture the Nursery returned in the Open() closure. Once that
+	// function returns, the nursery is considered closed. All functions will
+	// panic if called after the nursery has been closed.
 	Nursery interface {
 		// Start spins up a goroutine and returns right away so the parent
-		// function may call nursery functions.
+		// function may call more nursery functions.
 		//
 		// You will get ErrShuttingDown if the nursery is shutting down and
 		// your goroutine was not launched. A non shutdown nursery will always
-		// return nil.
+		// return nil. It is usually safe to ignore this error.
 		Start(nur CallbackFunc) error
 
 		// Shutdown cancels the nursery, propagating cancellation to all
-		// launched goroutines.
+		// launched goroutines. It is safe to call Shutdown multiple times.
 		//
 		// After Shutdown has been called, all subsequent calls to Start
 		// will fail with ErrShuttingDown.

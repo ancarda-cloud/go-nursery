@@ -95,26 +95,44 @@ func TestRetrieveContext(t *testing.T) {
 	})
 }
 
-func TestCapturedNurseryRegistersAsShutdown(t *testing.T) {
+func TestCapturedNurseryWillPanicIfContextIsCalled(t *testing.T) {
 	t.Parallel()
 
 	var captured nursery.Nursery
-
 	nursery.Open(t.Context())(func(nur nursery.Nursery) {
 		captured = nur
 	})
 
-	err := captured.Context().Err()
-	require.Error(t, err, "Expected nursery to no longer be active")
-	require.ErrorIs(t, err, context.Canceled)
+	assert.Panics(t, func() {
+		captured.Context()
+	})
+}
 
-	fatalFunc := func(_ nursery.Nursery) {
-		panic("Expected nursery to be shutting down")
-	}
+func TestCapturedNurseryWillPanicIfStartIsCalled(t *testing.T) {
+	t.Parallel()
 
-	err = captured.Start(fatalFunc)
-	require.Error(t, err)
-	assert.ErrorIs(t, err, nursery.ErrShuttingDown)
+	var captured nursery.Nursery
+	nursery.Open(t.Context())(func(nur nursery.Nursery) {
+		captured = nur
+	})
+
+	assert.Panics(t, func() {
+		_ = captured.Start(func(_ nursery.Nursery) {
+		})
+	})
+}
+
+func TestCapturedNurseryWillPanicIfShutdownIsCalled(t *testing.T) {
+	t.Parallel()
+
+	var captured nursery.Nursery
+	nursery.Open(t.Context())(func(nur nursery.Nursery) {
+		captured = nur
+	})
+
+	assert.Panics(t, func() {
+		captured.Shutdown()
+	})
 }
 
 func BenchmarkNurseryOpen(b *testing.B) {

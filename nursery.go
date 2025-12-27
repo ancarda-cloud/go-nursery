@@ -4,13 +4,15 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"sync/atomic"
 )
 
 type nursery struct {
-	ctx context.Context
-	cf  context.CancelFunc
-	wg  sync.WaitGroup
-	mtx sync.Mutex
+	ctx  context.Context
+	cf   context.CancelFunc
+	wg   sync.WaitGroup
+	mtx  sync.Mutex
+	dead atomic.Bool
 }
 
 // Open creates a nursery and returns a callback function that can be used to
@@ -21,10 +23,11 @@ func Open(ctx context.Context) func(CallbackFunc) {
 	ctx, cf := context.WithCancel(ctx)
 
 	nur := nursery{
-		ctx: ctx,
-		cf:  cf,
-		wg:  sync.WaitGroup{},
-		mtx: sync.Mutex{},
+		ctx:  ctx,
+		cf:   cf,
+		wg:   sync.WaitGroup{},
+		mtx:  sync.Mutex{},
+		dead: atomic.Bool{},
 	}
 
 	return nur.exec
@@ -33,6 +36,7 @@ func Open(ctx context.Context) func(CallbackFunc) {
 func (nur *nursery) Start(callback CallbackFunc) error {
 	nur.mtx.Lock()
 	defer nur.mtx.Unlock()
+	nur.assertNotShutdown()
 
 	err := nur.ctx.Err()
 	if err != nil {
@@ -53,11 +57,16 @@ func (nur *nursery) Start(callback CallbackFunc) error {
 func (nur *nursery) Shutdown() {
 	nur.mtx.Lock()
 	defer nur.mtx.Unlock()
+	nur.assertNotShutdown()
 
 	nur.cf()
 }
 
 func (nur *nursery) Context() context.Context {
+	nur.mtx.Lock()
+	defer nur.mtx.Unlock()
+	nur.assertNotShutdown()
+
 	return nur.ctx
 }
 
@@ -66,4 +75,12 @@ func (nur *nursery) exec(callback CallbackFunc) {
 
 	nur.wg.Wait()
 	nur.cf()
+
+	nur.dead.Store(true)
+}
+
+func (nur *nursery) assertNotShutdown() {
+	if nur.dead.Load() {
+		panic("use of shutdown nursery")
+	}
 }
